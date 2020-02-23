@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QSimulator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="QSimulator" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Content="Console Area" />
+        <Label Grid.Column="1" Content="Code Area" />
+        <Label x:Name="console" Grid.Column="0" Grid.Row="1" />
+        <TextBlock x:Name="code" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text="" />
+        <TextBox x:Name="terminal" Grid.Row="2" Grid.ColumnSpan="2" />
     </Grid>
 </Window>
