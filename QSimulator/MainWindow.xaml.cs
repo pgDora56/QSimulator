@@ -25,6 +25,8 @@ namespace QSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Answer> answers;
+        string[] codelines;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,18 +37,27 @@ namespace QSimulator
             string termtext = terminal.Text;
             try
             {
-                List<Answer> answers = SepareteTerm(termtext);
-                console.Text = message.Text = "";
-                foreach(Answer a in answers)
-                {
-                    console.Text = console.Text + $"Player{a.Player} -> {a.AnswerType}\n";
-                }
+                answers = SepareteTerm(termtext);
+                RefreshConsole();
             }
             catch(Exception ex)
             {
                 message.Text = ex.Message;
             }
 
+        }
+
+        private void Code_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                codelines = code.Text.Split('\n');
+                RefreshConsole();
+            }
+            catch(Exception ex)
+            {
+                message.Text = ex.Message;
+            }
         }
 
         private List<Answer> SepareteTerm(string text)
@@ -100,8 +111,19 @@ namespace QSimulator
             return answers;
         }
 
-
-
+        private void RefreshConsole()
+        {
+            console.Text = message.Text = "";
+            int i = 0;
+            foreach(string s in codelines)
+            {
+                console.Text += $"{++i}: {s}\n";
+            }
+            foreach(Answer a in answers)
+            {
+                console.Text += $"Player{a.Player} -> {a.AnswerType}\n";
+            }
+        }
     }
 
     class Answer
