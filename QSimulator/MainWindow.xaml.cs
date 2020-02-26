@@ -114,14 +114,39 @@ namespace QSimulator
         private void RefreshConsole()
         {
             console.Text = message.Text = "";
-            int i = 0;
-            foreach(string s in codelines)
-            {
-                console.Text += $"{++i}: {s}\n";
-            }
-            foreach(Answer a in answers)
+            //int i = 0;
+            //foreach (string s in codelines)
+            //{
+            //    console.Text += $"{++i}: {s}\n";
+            //}
+            foreach (Answer a in answers)
             {
                 console.Text += $"Player{a.Player} -> {a.AnswerType}\n";
+            }
+        }
+
+        private void Simulate(string[] rule, List<Answer> answers)
+        {
+            int win = 7;
+            int lose = 3;
+            int pl_size = 5;
+            int val_size = 2;
+            List<List<int>> vals = new List<List<int>>();
+            for(int i = 0; i < pl_size; i++)
+            {
+                var lis = new List<int>();
+                for (int j = 0; j < val_size; j++) lis.Add(0);
+                vals.Add(lis);
+            }
+
+            foreach(Answer a in answers)
+            {
+                if (a.Player > pl_size) throw new Exception("Player index too large");
+                switch (a.AnswerType)
+                {
+                    case AType.Correct:
+                        break;
+                }
             }
         }
     }
