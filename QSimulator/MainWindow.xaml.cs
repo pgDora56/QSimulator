@@ -55,9 +55,10 @@ namespace QSimulator
                 rule = new Rule(codelines);
                 RefreshConsole();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 message.Text = ex.Message;
+
             }
         }
 
@@ -115,12 +116,13 @@ namespace QSimulator
         private void RefreshConsole()
         {
             console.Text = message.Text = "";
-            console.Text = rule.ToString();
+            if(code.Text != "") console.Text = rule.ToString();
             //int i = 0;
             //foreach (string s in codelines)
             //{
             //    console.Text += $"{++i}: {s}\n";
             //}
+            if (answers == null) return;
             foreach (Answer a in answers)
             {
                 console.Text += $"Player{a.Player} -> {a.AnswerType}\n";
@@ -150,109 +152,6 @@ namespace QSimulator
                         break;
                 }
             }
-        }
-    }
-
-    class Rule
-    {
-        enum Part
-        {
-            None, Ident, Win, Lose, Cor, Wro
-        }
-
-        private IReadOnlyList<string> idents; // 各Playerが持つ変数
-        public IReadOnlyList<Node> win { get; } // 勝ち抜け条件
-        private IReadOnlyList<Node> lose { get; } // 敗退条件
-        private IReadOnlyList<Node> cor { get; } // 正解時の変数挙動
-        private IReadOnlyList<Node> wro { get; } // 誤答時の変数挙動
-
-        public int GetIdentIndex(string ident)
-        {
-            IReadOnlyList<int> id = (IReadOnlyList<int>)(
-                idents.Select((p, i) => new { Content = p, Index = i })
-                .Where(x => x.Content == ident)
-                .Select(x => x.Index)
-                );
-            if (id.Count == 0) throw new Exception("Identifier is not found");
-            return id[0];
-        }
-
-        public override string ToString()
-        {
-            return $"[Rule] Ident:{string.Join(",", idents)}, Win:{string.Join(",", win)}, Lose:{string.Join(",", lose)}, Correct:{string.Join(",", cor)}, Wrong:{string.Join(",", wro)}";
-        }
-
-
-        public Rule(string[] lines)
-        {
-            List<string> _idents = new List<string>(),
-                    _win = new List<string>(),
-                    _lose = new List<string>(),
-                    _cor = new List<string>(),
-                    _wro = new List<string>();
-
-            Part part = Part.None;
-            foreach (string l in lines)
-            {
-                string line = l.Replace("\n", "").Replace("\r", "");
-                Console.WriteLine(line);
-                switch (line.Replace(" ", ""))
-                {
-                    case "<Ident>":
-                        part = Part.Ident;
-                        break;
-                    case "<Win>":
-                        part = Part.Win;
-                        break;
-                    case "<Lose>":
-                        part = Part.Lose;
-                        break;
-                    case "<Correct>":
-                        part = Part.Cor;
-                        break;
-                    case "<Wrong>":
-                        part = Part.Wro;
-                        break;
-                    case "":
-                        // 空白はスルー
-                        break;
-                    default:
-                        switch (part)
-                        {
-                            case Part.Ident:
-                                _idents.Add(line.Replace(" ",""));
-                                break;
-                            case Part.Win:
-                                _win.Add(line);
-                                break;
-                            case Part.Lose:
-                                _lose.Add(line);
-                                break;
-                            case Part.Cor:
-                                _cor.Add(line);
-                                break;
-                            case Part.Wro:
-                                _wro.Add(line);
-                                break;
-                        }
-                        break;
-                }
-            }
-            idents = _idents;
-            win = makeNodes(_win);
-            lose = makeNodes(_lose);
-            cor = makeNodes(_cor);
-            wro = makeNodes(_wro);
-        }
-
-        private IReadOnlyList<Node> makeNodes(List<string> text)
-        {
-            List<Node> nodes = new List<Node>();
-            foreach(string s in text)
-            {
-                nodes.Add(new Node(s, this));
-            }
-            return nodes;
         }
     }
 

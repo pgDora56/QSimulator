@@ -13,9 +13,12 @@ Write rules in code area.
 For example(7o3x):
 
 ```
+<Init>
+count:5
+
 <Ident>
 o
-x
+x=0
 
 <Win>
 o>=7

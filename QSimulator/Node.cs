@@ -9,14 +9,18 @@ namespace QSimulator
     class Node
     {
         enum Process {
+            None,
             Plus, Minus, Mult, Div, Quot, Mod, // 算術演算: 足す・引く・掛ける・割る・商・余り
             GRE, EqGRE, LESS, EqLES, EQ, NEQ, // 比較演算: >, >=, <, <=, =, !=
         }
         public Node(string text, Rule rule)
         {
-            Process process;
+            text = text.Replace(" ", "");
+            Process process = Process.None;
             int head = 0, faze = 0;
             Value value1, value2;
+            value1 = null;
+            value2 = null;
             string ident; bool isInstance;
             ident = "";
 
@@ -168,6 +172,7 @@ namespace QSimulator
                 throw new Exception("Unknown Error: Faze is invalid");
             }
 
+            Console.WriteLine($"Node:: {process} {value1} {value2}");
         }
     }
 
@@ -190,6 +195,12 @@ namespace QSimulator
         {
             type = isInstance ? Type.instance : Type.ident;
             Number = n;
+        }
+
+        public override string ToString()
+        {
+            string tstr = (type == Type.ident) ? "Ident" : "Instance";
+            return $"{tstr} {Number}";
         }
     }
 }
