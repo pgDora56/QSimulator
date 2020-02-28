@@ -161,10 +161,10 @@ namespace QSimulator
         }
 
         private IReadOnlyList<string> idents; // 各Playerが持つ変数
-        public IReadOnlyList<string> win { get; } // 勝ち抜け条件
-        private IReadOnlyList<string> lose { get; } // 敗退条件
-        private IReadOnlyList<string> cor { get; } // 正解時の変数挙動
-        private IReadOnlyList<string> wro { get; } // 誤答時の変数挙動
+        public IReadOnlyList<Node> win { get; } // 勝ち抜け条件
+        private IReadOnlyList<Node> lose { get; } // 敗退条件
+        private IReadOnlyList<Node> cor { get; } // 正解時の変数挙動
+        private IReadOnlyList<Node> wro { get; } // 誤答時の変数挙動
 
         public int GetIdentIndex(string ident)
         {
@@ -239,12 +239,23 @@ namespace QSimulator
                 }
             }
             idents = _idents;
-            win = _win;
-            lose = _lose;
-            cor = _cor;
-            wro = _wro;
+            win = makeNodes(_win);
+            lose = makeNodes(_lose);
+            cor = makeNodes(_cor);
+            wro = makeNodes(_wro);
+        }
+
+        private IReadOnlyList<Node> makeNodes(List<string> text)
+        {
+            List<Node> nodes = new List<Node>();
+            foreach(string s in text)
+            {
+                nodes.Add(new Node(s, this));
+            }
+            return nodes;
         }
     }
+
 
     class Answer
     {
