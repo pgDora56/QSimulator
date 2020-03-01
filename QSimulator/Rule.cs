@@ -20,6 +20,7 @@ namespace QSimulator
         private IReadOnlyList<Node> lose { get; } // 敗退条件
         private IReadOnlyList<Node> cor { get; } // 正解時の変数挙動
         private IReadOnlyList<Node> wro { get; } // 誤答時の変数挙動
+        private IList<IList<int>> playerValues;
 
 
         public Rule(string[] lines)
@@ -103,6 +104,18 @@ namespace QSimulator
             lose = makeNodes(_lose);
             cor = makeNodes(_cor);
             wro = makeNodes(_wro);
+
+            playerValues = new List<IList<int>>();
+            for(int i = 0; i < PlayerCount; i++)
+            {
+                IList<int> p = new List<int>();
+                foreach(int v in _identInit)
+                {
+                    p.Add(v);
+                }
+                playerValues.Add(p);
+            }
+
         }
         public int GetIdentIndex(string ident)
         {
@@ -111,6 +124,11 @@ namespace QSimulator
                 if (idents[i] == ident) return i;
             }
             throw new Exception("Ident is not found");
+        }
+
+        public int GetIdentSize()
+        {
+            return idents.Count;
         }
 
         public override string ToString()
